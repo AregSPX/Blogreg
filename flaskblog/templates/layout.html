@@ -17,9 +17,9 @@
     <link href = "{{ url_for('static', filename='main.css') }}"  rel = 'stylesheet' type = 'text/css'> 
 
     {% if title %} <!--եթե մենք template ին title փոփն ենք տրամադրել (ինքը գոյություն ունի)-->
-    <title>Flask Blog - {{ title }}</title> 
+    <title>Blogreg - {{ title }}</title> 
     {% else %}
-    <title>Flask Blog</title>
+    <title>Blogreg</title>
     {% endif %}
 </head>
 <body> 
@@ -28,7 +28,7 @@
         <header class="site-header">
             <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
             <div class="container">
-                <a class="navbar-brand mr-4" href="/">Flask Blog</a>
+                <a class="navbar-brand mr-4" href="/">Blogreg</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
