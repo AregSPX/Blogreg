@@ -1,0 +1,37 @@
+<!--  Bootstrap is a CSS framework.  -->
+
+{% extends "layout.html" %}         <!--սա է հերության հաստատում, հերը ձգվումա մինչև իրան-->
+
+{% block content %}     <!--էս էլ արդեն էս էջի անհատականնա որ ասում էի, մենակ էս ենք թողում-->
+    <div class="content-section">       <!-- this class was addressed in CSS, we wrap the form in this -->
+        
+        <!-- action - ուր են գնում մուտքագրած տվյալները (դատարկ = նույն route, տեղումա մնում) -->
+        <form method="post" action="">    <!-- փոփերով աշխատելու համար պետք է դրանք վերցնել կրկնակի curly braces-ի մեջ -->
+                {{ form.hidden_tag() }}   <!-- ․hidden_tag()-ը ֆորմի անվտանգության մեջ է մտնում և պետք է գրվի ֆորմի անվանման հետ -->
+                <fieldset class="form-group">   <!-- some Bootstrap/CSS addressed stuff -->             
+                    <legend class="border-bottom mb-4">Reset Password</legend>
+                    <div class="form-group">    <!-- Ամեն մի դիվը արտահայտում է ֆորմի դաշտերից (սեկցիաներից) մեկը -->
+                        {{ form.email.label(class="form-control-label") }} <!-- Էս փոփին կլաս մցրինք (Bootstrap stuff) -->
+                        {% if form.email.errors %}   <!-- եթե դաշտը սխալ է լրացվել (ամեն մի դաշտ ունի իր սխալների ցուցակը, սենց ստուգում ենք թե արդյոք էտ ցուցակից որևէ մեկը տեղի ունի) -->
+                            
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}   <!-- էտ նույն դաշտը մնումա, բայց կարմիր ներկած ու տակից էլ սխալնա գրած -->
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control form-control-lg") }} <!-- եթե error չկա և ամեն-ինչ ճիշտա, ուղղակի դաշտը -->
+                        {% endif %}
+                    </div>
+                </fieldset> <!-- fieldset - (ֆորմի դաշտերի) խումբը քցում է քառակուսու մեջ, legend - քառակուսու label-ը -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+            
+
+        </form>
+    </div>
+    
+{% endblock content %}
+    

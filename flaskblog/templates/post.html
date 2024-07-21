@@ -1,0 +1,45 @@
+<!--ստեղ արդեն սաղ կարանք ջնջենք լոտե հերը կհոգա էտ ջնջածը-->
+
+{% extends "layout.html" %} <!--սա է հերության հաստատում, հերը ձգվումա մինչև իրան-->
+
+{% block content %} <!--էս էլ արդեն էս էջի անհատականնա որ ասում էի, մենակ էս ենք թողում-->
+    
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="">  <!-- պոստի ամենավերևը/դեմից մարդու օգտանկարը  -->
+    <div class="media-body">                  <!-- url_for - գտի static պապկի մեջ filename-ը, հենց էտ նկարի լինկն էլ (ճամփեն) վերցրու -->
+        <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('users.user_posts', username = post.author.username) }}">{{ post.author.username }}</a>     <!-- պոստի վերևը ցույց տալ միայն օգտանունը և ամսաթիվը (առանց ժամի) -->
+        <small class="text-muted">{{ post.date_posted.strftime('%d.%m.%Y') }}</small>   <!-- string-format-time (DateTime - ի ցուցադրման ձևափոխում) -->
+        {% if post.author == current_user %}
+            <div>   
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', post_id = post.id) }}">Update</a>   <!-- Update Post Redirection Button -->
+                <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>  <!-- Delete Post Button, modal is what pops up on screen and darkens the background (the are you sure stuff) -->
+            </div>  
+        {% endif %}
+        </div>
+      <h2 class="article-title">{{ post.title }}</h2>
+      <p class="article-content">{{ post.content }}</p>
+    </div>
+    </article>
+
+
+    
+   <!-- Modal - its what pops up on screen and darkens the background (the are you sure stuff) -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>   <!-- մոդալի վերնագիր -->
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- հյուսիս-արևելյան իքսիկ --> <!-- Use the "btn-close" class for the "X" button -->
+        </div>
+        <div class="modal-footer">    <!-- մոդալի տակինը (կոճակներ ևն) -->
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <!-- մոդալը փակելու կոճակ --><!-- Add "data-bs-dismiss" attribute to the "Close" button -->
+          <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">  <!-- action - ուրա ֆորմը քեզ ուղարկում (!!!), մեր դեպքում պոստի ջնջումը հաստատող պաշտոնական route -->
+            <input class="btn btn-danger" type="submit" value="Delete">       <!-- ջնջելու հաստատման կոճակ -->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

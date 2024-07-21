@@ -1,0 +1,105 @@
+<!--սա է շաբլոնի ժառանգությունը, էսի home ի ու about ի հերնա, ամեն մեկի մոտ էսի կգրվի որ մեկ մեկ չլրացնես ամեն մեկի մոտ նույն բանը-->
+<!--սա է unrepeating code, բոլոր զավակները ժառանգում հոր գրածները իրենց մոտ-->
+<!--  էրեխեքը կժառանգեն navbar-ը և էջի content-ի շաբլոնը  -->
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS (head) --> <!-- Bootstrap-ը կապում ենք HTML-ին -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- CSS-ը կապում ենք HTML-ին Flask-ի միջոցով -->
+    <link href = "{{ url_for('static', filename='main.css') }}"  rel = 'stylesheet' type = 'text/css'> 
+
+    {% if title %} <!--եթե մենք template ին title փոփն ենք տրամադրել (ինքը գոյություն ունի)-->
+    <title>Flask Blog - {{ title }}</title> 
+    {% else %}
+    <title>Flask Blog</title>
+    {% endif %}
+</head>
+<body> 
+    
+        <!--navigation.html - navbar -->
+        <header class="site-header">
+            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="/">Flask Blog</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                <!-- Navbar Left Side -->
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{{ url_for('main.home') }}">Home</a> <!-- էջերը պետք է կապել և ուղղորդել url_for-ով, ոչ թե հենց route-երի անուններով -->
+                    <a class="nav-item nav-link" href="{{ url_for('main.about') }}">About</a> <!-- լոտե կարողա route-ների անունները փոխվեն, բայց ք․ո․ f—երի անունները նույնն են մնում <==> url_for - ը, որը հիմնվում է f-երի, դառնում է առավել հուսալի երկարաժամկետ հատվածում -->
+                </div>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}      <!-- եթե օգտատեր կա լոգին եղած։ -->
+                        <a class="nav-item nav-link" href="{{ url_for('posts.new_post') }}">New Post</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Account</a>      <!-- ցույց տուր Account և Logout-ը -->
+                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>        <!-- այլապես միայն Login և Register-ը -->
+                        <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
+                    {% endif %}
+                </div>
+                </div>
+            </div>
+            </nav>
+        </header>
+      
+
+      
+        <!--main.html - content-->
+        <main role="main" class="container"> <!--տվյալ container կլասը թէտ պարունակությունը (տեքստը) խմբավորել ու քցել մեջտեղ-->
+            <div class="row">  
+            <div class="col-md-8">
+                
+                
+                {% with messages = get_flashed_messages(with_categories = True) %} <!-- get_flashed_messages - flash-երը վերցնում ենք messages փոփի տակ, with_categories = True <=>  տեղի ունեն Bootstrap-ի category-ները (մասնավորապես մեր կողմից նշած 'success'-ը)․ category-ն շաբլոն է, որը զարդարում (ոճավորում) է կատարում -->
+
+                    {% if messages %}   <!-- եթե ընդհանրապես էջից (ֆունկցիայից) ստացել ենք messages-ներ -->
+                        
+                        {% for category, message in messages %}     <!-- since with_categories is True (there's categories) we gonna get 2 values from each message -->
+                            
+                            <div class="alert alert-{{ category }}">           <!-- message-ը մցվում է իրեն համխանեղ կատեգորյայի կլաս ու ոճավորվում դրան համխան -->
+                                {{ message }}
+                            </div>
+                        
+                        {% endfor %}
+                    
+                    {% endif %}
+
+                {% endwith %} <!-- ֆլասկում statement-ները վերցնում ենք curly braces-ի և տոկոսների մեջ, վերջացնելուց նույն կերպ, և բառի դեմից տպցնում  end-  արմատը -->
+
+
+                {% block content %}{% endblock %} <!--էս էլ արդեն անհատական ամեն մեկի մոտ ինչ լինի, էս 2-ի մեջտեղնա պարունը-->
+            </div>
+            <div class="col-md-4">
+                <div class="content-section">
+                <h3>Our Sidebar</h3>
+                <p class='text-muted'>You can put any information here you'd like.
+                    <ul class="list-group">
+                    <li class="list-group-item list-group-item-light">Latest Posts</li>
+                    <li class="list-group-item list-group-item-light">Announcements</li>
+                    <li class="list-group-item list-group-item-light">Calendars</li>
+                    <li class="list-group-item list-group-item-light">etc</li>  
+                    </ul>
+                </p>
+                </div>
+            </div>
+            </div>
+        </main>
+    
+
+    <!-- Bootstrap JS (body) --> <!-- Bootstrap-ը սայտը սթայլինգ-սիրունացում-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+</body>
+</html>

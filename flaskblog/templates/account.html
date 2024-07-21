@@ -1,0 +1,69 @@
+{% extends "layout.html" %} <!--սա է հերության հաստատում, հերը ձգվումա մինչև իրան-->
+
+{% block content %}         <!--էս էլ արդեն էս էջի անհատականնա որ ասում էի, մենակ էս ենք թողում-->
+
+    <!-- Օգտատիրոջ տվյալների ներկայացում (օգտանուն, էլփոստ, նկար), Just some Bootstrap/CSS layout -->
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ image_file }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ current_user.username }}</h2>
+                <p class="text-secondary">{{ current_user.email }}</p>
+            </div>
+        </div>
+    <!-- FORM HERE -->
+        
+        <!-- action - ուր են գնում մուտքագրած տվյալները (դատարկ = նույն route, տեղումա մնում) -->
+        <form method="post" action="" enctype="multipart/form-data">    <!-- enctype - պետքա գրել որ մուտքագրված նկարները ճիշտ ընդունի -->
+                {{ form.hidden_tag() }}   <!-- փոփերով աշխատելու համար պետք է դրանք վերցնել կրկնակի curly braces-ի մեջ, ․hidden_tag()-ը ֆորմի անվտանգության մեջ է մտնում և պետք է գրվի ֆորմի անվանման հետ -->
+                <fieldset class="form-group">   <!-- some Bootstrap/CSS addressed stuff -->             
+                    <legend class="border-bottom mb-4">Account Info</legend>
+                    <div class="form-group">    <!-- Ամեն մի դիվը արտահայտում է ֆորմի դաշտերից (սեկցիաներից) մեկը -->
+                        
+                        {{ form.username.label(class="form-control-label") }} <!-- Էս փոփին կլաս մցրինք (Bootstrap stuff) -->
+
+                        {% if form.username.errors %}   <!-- եթե դաշտը սխալ է լրացվել (ամեն մի դաշտ ունի իր սխալների ցուցակը, սենց ստուգում ենք թե արդյոք էտ ցուցակից որևէ մեկը տեղի ունի) -->
+                            
+                            {{ form.username(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    <span>{{ error }}</span>    <!-- span - տակից գրած -->
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.username(class="form-control form-control-lg") }} <!-- label-ի տակ դե հենց դաշտն էլա պետք դնել -->
+                        {% endif %}
+
+
+                    </div>
+                    <div class="form-group">    <!-- This is where we're going to use out form fields -->
+                        {{ form.email.label(class="form-control-label") }} <!-- Էս փոփին կլաս մցրինք (Bootstrap stuff) -->
+                        {% if form.email.errors %}   <!-- եթե դաշտը սխալ է լրացվել (ամեն մի դաշտ ունի իր սխալների ցուցակը, սենց ստուգում ենք թե արդյոք էտ ցուցակից որևէ մեկը տեղի ունի) -->
+                            
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}   <!-- էտ նույն դաշտը մնումա, բայց կարմիր ներկած ու տակից էլ սխալնա գրած -->
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control form-control-lg") }} <!-- եթե error չկա և ամեն-ինչ ճիշտա, ուղղակի դաշտը -->
+                        {% endif %}
+                    </div>
+                    <div class="form-group">    <!-- Change profile pic -->
+                        {{ form.picture.label() }}
+                        {{ form.picture(class = "form-control-file") }} 
+                        {% if form.picture.errors %}
+                            {% for error in form.picture.errors %}
+                                <span class="text-danger">{{ error }}</span><br>    <!-- ստեղ ք․ո․ invalid-feedback div-ի մեջ չի (ուրիշ ձևա ֆայլի դաշտը ըլնում) span-ն ենք կլաս քցում -->
+                            {% endfor %}
+                        {% endif %}
+                </fieldset> <!-- fieldset - (ֆորմի դաշտերի) խումբը քցում է քառակուսու մեջ, legend - քառակուսու label-ը -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+        </form>
+    </div>
+
+{% endblock content %}
+    

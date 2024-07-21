@@ -1,0 +1,43 @@
+<!--ստեղ արդեն սաղ կարանք ջնջենք լոտե հերը կհոգա էտ ջնջածը-->
+
+{% extends "layout.html" %} <!--սա է հերության հաստատում, հերը ձգվումա մինչև իրան-->
+
+{% block content %} <!--էս էլ արդեն էս էջի անհատականնա որ ասում էի, մենակ էս ենք թողում-->
+    {% for post in posts.items %}   <!-- posts - ը սարքինք posts.items լոտե ինքը արդեն pagination - ա, այլ ոչ թե all -->
+    <article class="media content-section">
+      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="">  <!-- պոստի ամենավերևը/դեմից մարդու օգտանկարը  -->
+        <div class="media-body">                  <!-- url_for - գտի static պապկի մեջ filename-ը, հենց էտ նկարի լինկն էլ (ճամփեն) վերցրու -->
+          <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('users.user_posts', username = post.author.username) }}">{{ post.author.username }}</a>     <!-- պոստի վերևը ցույց տալ միայն օգտանունը և ամսաթիվը (առանց ժամի) -->
+            <small class="text-muted">{{ post.date_posted.strftime('%d.%m.%Y') }}</small>   <!-- string-format-time (DateTime - ի ցուցադրման ձևափոխում) -->
+          </div>
+          <h2><a class="article-title" href="{{ url_for('posts.post', post_id = post.id) }}">{{ post.title }}</a></h2>  <!-- url_for - ստեղծում ենք կապ post route-ի post.id փոփոխականի արժ ունեցող պոստի էջի հետ, այսինքն հենց այդ նույն պոստի հետ որը ունենք -->
+          <p class="article-content">{{ post.content }}</p>
+        </div>
+      </article>
+    {% endfor %}
+
+
+    
+     <!-- տակը տպում ենք էջերի համարների լինկերը -->
+    {% for page_num in posts.iter_pages(left_edge = 1, right_edge = 1, left_current = 1, right_current = 1) %}    <!--փակագծի միջինով սահմանում ենք, թե քանի թիվա ցուցադրելու էջի վրա -->
+    <!-- left/right_edge - ձախ և աջ եզրերից 1-ական էջ, left/right_current - տվյալ էջի ձախից և աջից 1-ական էջ -->
+
+      {% if page_num %}                         <!-- եթե բացթողում չի (թիվա) գրի էտ թիվը -->
+
+        {% if posts.page == page_num %}     <!-- Եթե թիվը տվյալ (մեր գտնվելու վայրի) էջիննա -->
+          <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>   <!-- պետքա մարդը հեշտ կողմնորոշվի թե որ էջի վրայա --> 
+
+        {% else %}    <!-- եթե մենք էտ էջի վրա չենք, չենք ներկում -->
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>   <!-- եթե սղմես թվին կուղարկվես home-ի ներսում համխան էջ (page_num) -->
+
+
+        {% endif %}
+
+      {% else %}    <!-- եթե թվերի միջև բացթողումա, արտահայտիր դա երեք կետով (որոնք այդ թվերի միջև են) -->
+      ...
+      {% endif %}
+
+    {% endfor %}
+
+{% endblock content %}

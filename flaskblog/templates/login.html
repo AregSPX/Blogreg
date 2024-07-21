@@ -1,0 +1,64 @@
+<!--  Bootstrap is a CSS framework.  -->
+
+{% extends "layout.html" %} <!--սա է հերության հաստատում, հերը ձգվումա մինչև իրան-->
+
+{% block content %}     <!--էս էլ արդեն էս էջի անհատականնա որ ասում էի, մենակ էս ենք թողում-->
+    <div class="content-section">       <!-- this class was addressed in CSS, we wrap the form in this -->
+        
+        <!-- action - ուր են գնում մուտքագրած տվյալները (դատարկ = նույն route, տեղումա մնում) -->
+        <form method="post" action="">    <!-- փոփերով աշխատելու համար պետք է դրանք վերցնել կրկնակի curly braces-ի մեջ -->
+                {{ form.hidden_tag() }}   <!-- ․hidden_tag()-ը ֆորմի անվտանգության մեջ է մտնում և պետք է գրվի ֆորմի անվանման հետ -->
+                <fieldset class="form-group">   <!-- some Bootstrap/CSS addressed stuff -->             
+                    <legend class="border-bottom mb-4">Log In</legend>
+                    <div class="form-group">    <!-- Ամեն մի դիվը արտահայտում է ֆորմի դաշտերից (սեկցիաներից) մեկը -->
+                        {{ form.email.label(class="form-control-label") }} <!-- Էս փոփին կլաս մցրինք (Bootstrap stuff) -->
+                        {% if form.email.errors %}   <!-- եթե դաշտը սխալ է լրացվել (ամեն մի դաշտ ունի իր սխալների ցուցակը, սենց ստուգում ենք թե արդյոք էտ ցուցակից որևէ մեկը տեղի ունի) -->
+                            
+                            {{ form.email(class="form-control form-control-lg is-invalid") }}   <!-- էտ նույն դաշտը մնումա, բայց կարմիր ներկած ու տակից էլ սխալնա գրած -->
+                            <div class="invalid-feedback">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control form-control-lg") }} <!-- եթե error չկա և ամեն-ինչ ճիշտա, ուղղակի դաշտը -->
+                        {% endif %}
+                    </div>
+                    <div class="form-group">    <!-- This is where we're going to use out form fields -->
+                        {{ form.password.label(class="form-control-label") }} <!-- Էս փոփին կլաս մցրինք (Bootstrap stuff) -->
+                        {% if form.password.errors %}   <!-- եթե դաշտը սխալ է լրացվել (ամեն մի դաշտ ունի իր սխալների ցուցակը, սենց ստուգում ենք թե արդյոք էտ ցուցակից որևէ մեկը տեղի ունի) -->
+                            
+                            {{ form.password(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.password(class="form-control form-control-lg") }} <!-- label-ի տակ դե հենց դաշտն էլա պետք դնել -->
+                        {% endif %}
+                    
+                    <div class="form-check">        <!-- form-check - a checkbox (ճտիկը) class -->
+                        {{ form.remember(class="form-check-input") }}
+                        {{ form.remember.label(class="form-check-label") }}
+                    </div>
+
+                </fieldset> <!-- fieldset - (ֆորմի դաշտերի) խումբը քցում է քառակուսու մեջ, legend - քառակուսու label-ը -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                    <small class="text-muted ml-2">             <!-- Forgot Password? -->
+                        <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
+                    </small>
+                </div>
+                
+
+        </form>
+    </div>
+    <div class="border-top pt-3">   <!-- Need An Account? Sign up now -->
+        <small class="text-muted">  <!-- This class makes the text kinda faded -->
+            Need An Account? <a href="{{ url_for('users.register') }}" class="ml-2">Sign Up Now</a>
+            <!-- It's a good idea to use {{url_for}} for links, we pass the route function name here -->
+        </small>
+    </div>
+{% endblock content %}
+    
